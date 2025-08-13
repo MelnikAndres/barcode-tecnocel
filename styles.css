@@ -1,0 +1,298 @@
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255,255,255,0.7);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+}
+
+.loader-spinner {
+    border: 6px solid #e3e8ff;
+    border-top: 6px solid #2563eb;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader-text {
+    color: #1a237e;
+    font-size: 1.13em;
+    font-weight: 600;
+    text-shadow: 0 1px 4px #e3e8ff;
+}
+/* Redesigned icon button group and label */
+.icon-btn-group {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 14px;
+    margin-bottom: 10px;
+}
+
+.icon-btn-with-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-btn-label {
+    margin-top: 0;
+    font-size: 1.08em;
+    color: #1a237e;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    text-align: center;
+    user-select: none;
+    text-shadow: 0 1px 4px #e3e8ff;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(120deg, #f8fafc 0%, #e3e8ff 100%);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* Enhanced container for better centering and shadow */
+.container {
+    max-width: 420px;
+    margin: 56px auto 0 auto;
+    background: #fff;
+    padding: 38px 28px 32px 28px;
+    border-radius: 22px;
+    box-shadow: 0 8px 36px rgba(60, 80, 180, 0.13);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: 1.5px solid #e3e8ff;
+}
+
+h2, h3 {
+    color: #1a237e;
+    margin-bottom: 18px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-align: center;
+    text-shadow: 0 1px 4px #e3e8ff;
+}
+
+#reader, #venta-reader {
+    width: 100%;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f0f4fa;
+    box-shadow: 0 2px 8px rgba(60, 80, 180, 0.07);
+    border: 1px solid #e3e8ff;
+}
+
+#result, #error {
+    font-size: 1.08em;
+    color: #1a237e;
+    margin-top: 18px;
+    min-height: 24px;
+    text-align: center;
+}
+
+#error {
+    color: #e74c3c;
+    font-weight: 600;
+    text-shadow: 0 1px 4px #ffe3e3;
+}
+
+/* Improved spacing for form groups */
+.form-group {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+label {
+    display: block;
+    margin-bottom: 2px;
+    color: #1a237e;
+    font-size: 1.01em;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    padding-left: 2px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.7px solid #d1d5fa;
+    border-radius: 10px;
+    font-size: 1.04em;
+    background: #f6f8fe;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    margin-bottom: 2px;
+    color: #1a237e;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #2563eb;
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 2px #c7d2fe;
+}
+
+.main-btn {
+    padding: 13px 0;
+    min-width: 120px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.04em;
+    font-weight: 700;
+    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.10);
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    margin-top: 8px;
+    letter-spacing: 0.2px;
+}
+
+.second-btn {
+    padding: 13px 0;
+    min-width: 120px;
+    background: #6b7280;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.04em;
+    font-weight: 700;
+    box-shadow: 0 2px 12px rgba(107, 114, 128, 0.10);
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    margin-top: 8px;
+    letter-spacing: 0.2px;
+}
+
+.icon-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.1em;
+    box-shadow: 0 4px 18px rgba(37, 99, 235, 0.13);
+    border: none;
+    margin: 0 auto;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+}
+
+.icon-btn:active {
+    background: #1e40af;
+    transform: scale(0.97);
+}
+
+.icon-btn:focus {
+    box-shadow: 0 0 0 4px #c7d2fe;
+}
+
+.icon-btn img, .icon-btn svg {
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+}
+
+.main-btn:disabled {
+    background: #bdbdbd !important;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.main-btn:hover:not(:disabled) {
+    background: #1e40af !important;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.16);
+}
+
+.icon-btn:hover:not(:disabled) {
+    background: #1e40af !important;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.16);
+}
+
+/* Improved button alignment for form actions */
+.actions {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 22px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.actions button, button[type="submit"] {
+    width: 100%;
+}
+
+#navigation {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    .container {
+        max-width: 98vw;
+        padding: 12px 2vw;
+    }
+
+    h2, h3 {
+        font-size: 1.13em;
+    }
+
+    button {
+        padding: 10px 0;
+        font-size: 0.98em;
+    }
+
+    .form-group {
+        margin-bottom: 14px;
+    }
+
+    .icon-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.3em;
+    }
+
+    .icon-btn-label {
+        font-size: 0.98em;
+    }
+
+    .icon-btn-group {
+        gap: 16px;
+    }
+}

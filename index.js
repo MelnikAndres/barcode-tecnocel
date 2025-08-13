@@ -14,13 +14,64 @@ const codigoInput = document.getElementById('codigo');
 const nombreInput = document.getElementById('nombre');
 const precioInput = document.getElementById('precio');
 const cantidadInput = document.getElementById('cantidad');
+const btnProductoBuscar = document.getElementById('btn-producto-buscar');
 const ventaCodigoInput = document.getElementById('venta-codigo');
 const ventaNombreInput = document.getElementById('venta-nombre');
 const ventaPrecioListadoInput = document.getElementById('venta-precio-listado');
 const ventaPrecioVendidoInput = document.getElementById('venta-precio-vendido');
 const btnVentaScan = document.getElementById('btn-venta-scan');
+const btnVentaBuscar = document.getElementById('btn-venta-buscar');
 const ventaReader = document.getElementById('venta-reader');
+const ventaCantidadInput = document.getElementById('venta-cantidad');
+const loaderDiv = document.getElementById('loader');
+// Buscar información del producto al hacer clic en el botón buscar del formulario de producto
+btnProductoBuscar.onclick = async (e) => {
+    e.preventDefault();
+    errorDiv.textContent = '';
+    const codigo = codigoInput.value.trim();
+    if (!codigo) {
+        resultDiv.textContent = 'Ingrese un código para buscar.';
+        nombreInput.value = '';
+        precioInput.value = '';
+        cantidadInput.value = '';
+        return;
+    }
+    resultDiv.textContent = 'Buscando producto...';
+    showLoader(true);
+    try {
+        const res = await fetch(`${APPSCRIPT_URL}?codigo=${encodeURIComponent(codigo)}`,
+            { redirect: 'follow' }
+        );
+        const data = await res.json();
+        if (data.error) {
+            resultDiv.textContent = 'Producto no encontrado. Puede crearlo:';
+            nombreInput.value = '';
+            precioInput.value = '';
+            cantidadInput.value = '';
+        } else {
+            resultDiv.textContent = 'Producto encontrado. Puede editar y guardar:';
+            nombreInput.value = data.nombre;
+            precioInput.value = data.precio;
+            cantidadInput.value = data.cantidad;
+        }
+    } catch (err) {
+        errorDiv.textContent = 'Error de red o servidor.';
+    }
+    showLoader(false);
+};
+
+function showLoader(show) {
+    loaderDiv.style.display = show ? '' : 'none';
+}
+// Buscar información del producto al hacer clic en el botón buscar
+btnVentaBuscar.onclick = async (e) => {
+    e.preventDefault();
+    showLoader(true);
+    await autocompletarVenta(ventaCodigoInput.value.trim());
+    showLoader(false);
+};
 let ventaScanner = null;
+
 // Escanear código en formulario de venta
 btnVentaScan.onclick = async (e) => {
     e.preventDefault();
@@ -43,99 +94,146 @@ btnVentaScan.onclick = async (e) => {
     );
 };
 
-ventaCodigoInput.addEventListener('change', async () => {
-    await autocompletarVenta(ventaCodigoInput.value.trim());
-});
-
 async function autocompletarVenta(codigo) {
     if (!codigo) {
         ventaNombreInput.value = '';
         ventaPrecioListadoInput.value = '';
+        ventaCantidadInput.value = '';
         return;
     }
     try {
+        showLoader(true);
         const res = await fetch(`${APPSCRIPT_URL}?codigo=${encodeURIComponent(codigo)}`);
         const data = await res.json();
+        showLoader(false);
         if (data.error) {
             ventaNombreInput.value = '';
             ventaPrecioListadoInput.value = '';
+            ventaCantidadInput.value = '';
             errorDiv.textContent = 'Producto no encontrado en stock para venta.';
         } else {
             ventaNombreInput.value = data.nombre;
             ventaPrecioListadoInput.value = data.precio;
+            ventaCantidadInput.value = data.cantidad;
             errorDiv.textContent = '';
         }
     } catch (err) {
         ventaNombreInput.value = '';
         ventaPrecioListadoInput.value = '';
+        ventaCantidadInput.value = '';
+        showLoader(false);
         errorDiv.textContent = 'Error de red o servidor.';
     }
 }
 let scanner = null;
 
-btnScan.onclick = () => {
+
+const showNavigation = (show) => {
+    document.getElementById('navigation').style.display = show ? '' : 'none';
+    if (!show) return;
+    showMainActions(false);
+}
+
+const showMainActions = (show) => {
+    document.getElementById('main-actions').style.display = show ? '' : 'none';
+    if (!show) return;
+    showNavigation(false);
+}
+
+const showProductForm = () => {
+    form.style.display = '';
+    ventaForm.style.display = 'none';
+    showNavigation(true);
+}
+
+const showVentaForm = () => {
+    form.style.display = 'none';
+    ventaForm.style.display = '';
+    showNavigation(true);
+}
+
+const showHome = () => {
     form.style.display = 'none';
     ventaForm.style.display = 'none';
-    reader.style.display = '';
-    resultDiv.textContent = 'Escanee un código de barras...';
-    errorDiv.textContent = '';
-    if (!scanner) {
-        scanner = new Html5Qrcode('reader');
-    }
-    scanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: 250, formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.UPC_E] },
-        (decodedText) => {
-            scanner.stop();
-            reader.style.display = 'none';
-            buscarProducto(decodedText);
-        },
-        (error) => {
-            // Opcional: manejar errores de escaneo
+    showReader(false);
+    cleanError();
+    showMainActions(true);
+    resultDiv.textContent = 'Seleccione una acción para comenzar.';
+}
+
+const startScanner = () => {
+    showLoader(true);
+    try {
+        if (!scanner) {
+            scanner = new Html5Qrcode('reader');
         }
-    );
+        scanner.start(
+            { facingMode: 'environment' },
+            { fps: 30, qrbox: 250, formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.UPC_E] },
+            (decodedText) => {
+                scanner.stop();
+                reader.style.display = 'none';
+                showLoader(false);
+                buscarProducto(decodedText);
+            },
+            (error) => {
+                // Opcional: manejar errores de escaneo
+            }
+        ).then(() => {
+            showLoader(false);
+        }).catch(() => {
+            showLoader(false);
+        });
+    } catch (e) {
+        showLoader(false);
+    }
+}
+
+const showReader = (show) => {
+    reader.style.display = show ? '' : 'none';
+    if (!show && scanner) {
+        try {
+            scanner.stop();
+        } catch (e) {
+            // no-op, puede que el scanner no esté iniciado
+        }
+    }
+}
+
+
+const cleanError = () => {
+    errorDiv.textContent = '';
+}
+
+btnScan.onclick = () => {
+    showReader(true);
+    showNavigation(true);
+    cleanError();
+    resultDiv.textContent = 'Escanee un código de barras...';
+    startScanner();
 };
 
 btnManual.onclick = () => {
-    if (scanner) {
-        scanner.stop();
-    }
-    reader.style.display = 'none';
-    form.style.display = '';
-    ventaForm.style.display = 'none';
+
+    showReader(false);
+    showProductForm();
+    cleanError();
     resultDiv.textContent = 'Ingrese los datos del producto.';
-    errorDiv.textContent = '';
     form.reset();
 };
 
 btnVenta.onclick = () => {
-    if (scanner) {
-        scanner.stop();
-    }
-    reader.style.display = 'none';
-    form.style.display = 'none';
-    ventaForm.style.display = '';
+
+    showReader(false);
+    showVentaForm();
+    cleanError();
     resultDiv.textContent = 'Ingrese los datos de la venta.';
-    errorDiv.textContent = '';
     ventaForm.reset();
 };
 
 btnVolver.onclick = () => {
-    ventaForm.style.display = 'none';
-    form.style.display = 'none';
-    reader.style.display = 'none';
-    btnVolver.style.display = 'none';
-    resultDiv.textContent = 'Seleccione una acción para comenzar.';
-    errorDiv.textContent = '';
+    showHome();
 };
-
-// Mostrar botón volver solo cuando ventaForm está visible
-ventaForm.addEventListener('show', () => {
-    btnVolver.style.display = '';
-});
-ventaForm.addEventListener('hide', () => {
-    btnVolver.style.display = 'none';
-});
 
 form.onsubmit = async (e) => {
     e.preventDefault();
@@ -150,10 +248,11 @@ form.onsubmit = async (e) => {
         errorDiv.textContent = 'Todos los campos son obligatorios.';
         return;
     }
+    showLoader(true);
     try {
         const res = await fetch(APPSCRIPT_URL, {
             method: 'POST',
-            redirect: 'follow', 
+            redirect: 'follow',
             body: JSON.stringify(producto)
         });
         const data = await res.json();
@@ -166,6 +265,7 @@ form.onsubmit = async (e) => {
     } catch (err) {
         errorDiv.textContent = 'Error de red o servidor.';
     }
+    showLoader(false);
 };
 
 ventaForm.onsubmit = async (e) => {
@@ -180,6 +280,7 @@ ventaForm.onsubmit = async (e) => {
         errorDiv.textContent = 'Debe escanear o ingresar un código válido y el precio vendido.';
         return;
     }
+    showLoader(true);
     try {
         const res = await fetch(APPSCRIPT_URL, {
             method: 'POST',
@@ -198,6 +299,7 @@ ventaForm.onsubmit = async (e) => {
     } catch (err) {
         errorDiv.textContent = 'Error de red o servidor.';
     }
+    showLoader(false);
 };
 
 async function buscarProducto(codigo) {
@@ -206,6 +308,7 @@ async function buscarProducto(codigo) {
     form.style.display = '';
     ventaForm.style.display = 'none';
     codigoInput.value = codigo;
+    showLoader(true);
     try {
         const res = await fetch(`${APPSCRIPT_URL}?codigo=${encodeURIComponent(codigo)}`,
             { redirect: 'follow' }
@@ -225,4 +328,5 @@ async function buscarProducto(codigo) {
     } catch (err) {
         errorDiv.textContent = 'Error de red o servidor.';
     }
+    showLoader(false);
 }

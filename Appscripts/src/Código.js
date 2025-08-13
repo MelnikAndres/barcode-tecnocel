@@ -4,9 +4,12 @@ function registrarVenta(codigo, nombre, precioListado, precioVendido) {
   let sheet = ss.getSheetByName('ventas');
   if (!sheet) {
     sheet = ss.insertSheet('ventas');
-    sheet.appendRow(['codigo', 'nombre', 'precio listado', 'precio vendido']);
+    sheet.appendRow(['fecha', 'hora', 'codigo', 'nombre', 'precio listado', 'precio vendido']);
   }
-  sheet.appendRow([codigo, nombre, precioListado, precioVendido]);
+  const now = new Date();
+  const fecha = Utilities.formatDate(now, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const hora = Utilities.formatDate(now, Session.getScriptTimeZone(), 'HH:mm:ss');
+  sheet.appendRow([fecha, hora, codigo, nombre, precioListado, precioVendido]);
 }
 function doGet(e) {
   const ss = SpreadsheetApp.openById('1YTKv0ziQasi9Lwm05z4AqgJ0d_eyXYeWSxMc4j7BEfQ');
@@ -85,11 +88,14 @@ function doPost(e) {
   const allData = sheet.getDataRange().getValues();
   const headers = allData[0];
   const idxCodigo = headers.indexOf('codigo');
-  const codigoExiste = allData.slice(1).some(row => String(row[idxCodigo]) === String(codigo));
-  if (codigoExiste) {
-    return ContentService.createTextOutput(JSON.stringify({ error: 'El código ya existe' })).setMimeType(ContentService.MimeType.JSON);
+  const rowIndex = allData.slice(1).findIndex(row => String(row[idxCodigo]) === String(codigo));
+  if (rowIndex !== -1) {
+    // Si el código existe, actualizar la fila correspondiente
+    sheet.getRange(rowIndex + 2, 1, 1, 4).setValues([[codigo, nombre, precio, cantidad]]); // +2 por header y base 1
+    return ContentService.createTextOutput(JSON.stringify({ success: true, updated: true })).setMimeType(ContentService.MimeType.JSON);
   }
+  // Si no existe, agregar nueva fila
   sheet.appendRow([codigo, nombre, precio, cantidad]);
-  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify({ success: true, created: true })).setMimeType(ContentService.MimeType.JSON);
 }
 
