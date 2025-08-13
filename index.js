@@ -18,6 +18,59 @@ const ventaCodigoInput = document.getElementById('venta-codigo');
 const ventaNombreInput = document.getElementById('venta-nombre');
 const ventaPrecioListadoInput = document.getElementById('venta-precio-listado');
 const ventaPrecioVendidoInput = document.getElementById('venta-precio-vendido');
+const btnVentaScan = document.getElementById('btn-venta-scan');
+const ventaReader = document.getElementById('venta-reader');
+let ventaScanner = null;
+// Escanear código en formulario de venta
+btnVentaScan.onclick = async (e) => {
+    e.preventDefault();
+    ventaReader.style.display = '';
+    if (!ventaScanner) {
+        ventaScanner = new Html5Qrcode('venta-reader');
+    }
+    ventaScanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: 200, formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.UPC_E] },
+        async (decodedText) => {
+            ventaScanner.stop();
+            ventaReader.style.display = 'none';
+            ventaCodigoInput.value = decodedText;
+            await autocompletarVenta(decodedText);
+        },
+        (error) => {
+            // Opcional: manejar errores de escaneo
+        }
+    );
+};
+
+ventaCodigoInput.addEventListener('change', async () => {
+    await autocompletarVenta(ventaCodigoInput.value.trim());
+});
+
+async function autocompletarVenta(codigo) {
+    if (!codigo) {
+        ventaNombreInput.value = '';
+        ventaPrecioListadoInput.value = '';
+        return;
+    }
+    try {
+        const res = await fetch(`${APPSCRIPT_URL}?codigo=${encodeURIComponent(codigo)}`);
+        const data = await res.json();
+        if (data.error) {
+            ventaNombreInput.value = '';
+            ventaPrecioListadoInput.value = '';
+            errorDiv.textContent = 'Producto no encontrado en stock para venta.';
+        } else {
+            ventaNombreInput.value = data.nombre;
+            ventaPrecioListadoInput.value = data.precio;
+            errorDiv.textContent = '';
+        }
+    } catch (err) {
+        ventaNombreInput.value = '';
+        ventaPrecioListadoInput.value = '';
+        errorDiv.textContent = 'Error de red o servidor.';
+    }
+}
 let scanner = null;
 
 btnScan.onclick = () => {
@@ -121,12 +174,10 @@ ventaForm.onsubmit = async (e) => {
     const venta = {
         venta: true,
         codigo: ventaCodigoInput.value.trim(),
-        nombre: ventaNombreInput.value.trim(),
-        precioListado: parseFloat(ventaPrecioListadoInput.value),
         precioVendido: parseFloat(ventaPrecioVendidoInput.value)
     };
-    if (!venta.codigo || !venta.nombre || isNaN(venta.precioListado) || isNaN(venta.precioVendido)) {
-        errorDiv.textContent = 'Todos los campos de la venta son obligatorios.';
+    if (!venta.codigo || isNaN(venta.precioVendido)) {
+        errorDiv.textContent = 'Debe escanear o ingresar un código válido y el precio vendido.';
         return;
     }
     try {
@@ -139,6 +190,8 @@ ventaForm.onsubmit = async (e) => {
         if (data.success) {
             resultDiv.textContent = 'Venta registrada correctamente.';
             ventaForm.reset();
+            ventaNombreInput.value = '';
+            ventaPrecioListadoInput.value = '';
         } else {
             errorDiv.textContent = data.error || 'Error al registrar venta.';
         }

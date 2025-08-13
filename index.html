@@ -90,17 +90,21 @@
         </form>
         <form id="venta-form" style="display:none; margin-top:24px;">
             <h3>Registrar Venta</h3>
-            <div class="form-group">
-                <label for="venta-codigo">Código</label>
-                <input type="text" id="venta-codigo" name="venta-codigo" required>
+            <div class="form-group" style="display:flex; align-items:center; gap:8px;">
+                <div style="flex:1;">
+                    <label for="venta-codigo">Código</label>
+                    <input type="text" id="venta-codigo" name="venta-codigo" required>
+                </div>
+                <button type="button" id="btn-venta-scan" title="Escanear código" style="margin-top:22px;">📷</button>
             </div>
+            <div id="venta-reader" style="display:none; margin-bottom:12px;"></div>
             <div class="form-group">
                 <label for="venta-nombre">Nombre</label>
-                <input type="text" id="venta-nombre" name="venta-nombre" required>
+                <input type="text" id="venta-nombre" name="venta-nombre" required readonly>
             </div>
             <div class="form-group">
                 <label for="venta-precio-listado">Precio listado</label>
-                <input type="number" id="venta-precio-listado" name="venta-precio-listado" step="0.01" required>
+                <input type="number" id="venta-precio-listado" name="venta-precio-listado" step="0.01" required readonly>
             </div>
             <div class="form-group">
                 <label for="venta-precio-vendido">Precio vendido</label>
