@@ -88,6 +88,30 @@
             </div>
             <button type="submit" id="btn-save">Guardar producto</button>
         </form>
+        <form id="venta-form" style="display:none; margin-top:24px;">
+            <h3>Registrar Venta</h3>
+            <div class="form-group">
+                <label for="venta-codigo">Código</label>
+                <input type="text" id="venta-codigo" name="venta-codigo" required>
+            </div>
+            <div class="form-group">
+                <label for="venta-nombre">Nombre</label>
+                <input type="text" id="venta-nombre" name="venta-nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="venta-precio-listado">Precio listado</label>
+                <input type="number" id="venta-precio-listado" name="venta-precio-listado" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="venta-precio-vendido">Precio vendido</label>
+                <input type="number" id="venta-precio-vendido" name="venta-precio-vendido" step="0.01" required>
+            </div>
+            <button type="submit" id="btn-venta-save">Registrar venta</button>
+        </form>
+        <div class="actions" style="margin-top:8px;">
+            <button id="btn-venta">Registrar una venta</button>
+            <button id="btn-volver" style="display:none;">Volver</button>
+        </div>
         <div id="result">Seleccione una acción para comenzar.</div>
         <div id="error" style="color:red;"></div>
     </div>
