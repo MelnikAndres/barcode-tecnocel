@@ -76,22 +76,7 @@ let ventaScanner = null;
 btnVentaScan.onclick = async (e) => {
     e.preventDefault();
     ventaReader.style.display = '';
-    if (!ventaScanner) {
-        ventaScanner = new Html5Qrcode('venta-reader');
-    }
-    ventaScanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: 200, formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.UPC_E] },
-        async (decodedText) => {
-            ventaScanner.stop();
-            ventaReader.style.display = 'none';
-            ventaCodigoInput.value = decodedText;
-            await autocompletarVenta(decodedText);
-        },
-        (error) => {
-            // Opcional: manejar errores de escaneo
-        }
-    );
+    startVentaScanner();
 };
 
 async function autocompletarVenta(codigo) {
@@ -186,6 +171,40 @@ const startScanner = () => {
         });
     } catch (e) {
         showLoader(false);
+        errorDiv.textContent = 'Error al iniciar el escáner.';
+    }
+}
+
+const startVentaScanner = () => {
+    showLoader(true);
+    try {
+
+        if (!ventaScanner) {
+            ventaScanner = new Html5Qrcode('venta-reader');
+        }
+        ventaScanner.start(
+            { facingMode: 'environment' },
+            { fps: 10, qrbox: 200, formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.UPC_E] },
+            async (decodedText) => {
+                ventaScanner.stop();
+                ventaReader.style.display = 'none';
+                ventaCodigoInput.value = decodedText;
+                await autocompletarVenta(decodedText);
+            },
+            (error) => {
+                // Opcional: manejar errores de escaneo
+            }
+        ).then(() => {
+            showLoader(false);
+        }
+        ).catch(() => {
+            showLoader(false);
+        });
+    }
+    catch (e) {
+        showLoader(false);
+        errorDiv.textContent = 'Error al iniciar el escáner de venta.';
+        return;
     }
 }
 

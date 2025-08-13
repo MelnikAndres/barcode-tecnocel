@@ -24,9 +24,9 @@
         <form id="product-form" style="display:none;">
             <div class="form-group">
                 <label for="codigo">Código</label>
-                <div class="icon-btn-group">
-                    <input type="text" id="codigo" name="codigo" required style="width:calc(100% - 44px);display:inline-block;">
-                    <button class="icon-btn" type="button" id="btn-producto-buscar" title="Buscar información" style="margin-left:4px;"><i class="fa fa-search" aria-hidden="true"></i></button>
+                <div class="side-btn-group">
+                    <input type="text" id="codigo" name="codigo" required >
+                    <button class="side-btn" type="button" id="btn-producto-buscar" title="Buscar información"><i class="fa fa-search" aria-hidden="true"></i></button>
                 </div>
             </div>
             <div class="form-group">
@@ -47,18 +47,15 @@
             <h3>Registrar Venta</h3>
             <div class="form-group">
                 <label for="venta-codigo">Código</label>
+                <div class="side-btn-group">
                 <input type="text" id="venta-codigo" name="venta-codigo" required>
+                    <button class="side-btn" type="button" id="btn-venta-buscar" title="Buscar información"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
                 <div class="icon-btn-group">
                     <div class="icon-btn-with-label">
                         <button class="icon-btn" type="button" id="btn-venta-scan" title="Escanear código"><i
                                 class="fa fa-qrcode" aria-hidden="true"></i></button>
                         <div class="icon-btn-label">Escanear</div>
-                    </div>
-                    <div class="icon-btn-with-label">
-                        <button class="icon-btn" type="button" id="btn-venta-buscar" title="Buscar información"><i
-                                class="fa fa-search" aria-hidden="true"></i>
-                        </button>
-                        <div class="icon-btn-label">Buscar</div>
                     </div>
                 </div>
             </div>

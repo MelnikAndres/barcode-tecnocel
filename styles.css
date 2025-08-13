@@ -62,6 +62,32 @@
     text-shadow: 0 1px 4px #e3e8ff;
 }
 
+.side-btn{
+    background: #2563eb;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 0 8px 8px 0;
+    transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-btn:hover {
+    background: #1e40af;
+}
+
+.side-btn-group {
+    display: flex;
+    align-items: stretch;
+}
+
+.side-btn-group input{
+    border-radius: 8px 0 0 8px !important;
+}
+
 body {
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
     background: linear-gradient(120deg, #f8fafc 0%, #e3e8ff 100%);
@@ -140,22 +166,20 @@ input[type="text"],
 input[type="number"] {
     width: 100%;
     padding: 13px 16px;
-    border: 1.7px solid #d1d5fa;
+    border: 1px solid #d1d5fa;
     border-radius: 10px;
     font-size: 1.04em;
     background: #f6f8fe;
-    transition: border 0.2s, box-shadow 0.2s;
+    transition: border 0.2s;
     box-sizing: border-box;
-    margin-bottom: 2px;
     color: #1a237e;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus {
     border-color: #2563eb;
-    outline: none;
+    outline: none !important;
     background: #fff;
-    box-shadow: 0 0 0 2px #c7d2fe;
 }
 
 .main-btn {
@@ -168,8 +192,7 @@ input[type="number"]:focus {
     cursor: pointer;
     font-size: 1.04em;
     font-weight: 700;
-    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.10);
-    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    transition: background 0.2s, transform 0.1s;
     margin-top: 8px;
     letter-spacing: 0.2px;
 }
@@ -184,26 +207,24 @@ input[type="number"]:focus {
     cursor: pointer;
     font-size: 1.04em;
     font-weight: 700;
-    box-shadow: 0 2px 12px rgba(107, 114, 128, 0.10);
-    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    transition: background 0.2s, transform 0.1s;
     margin-top: 8px;
     letter-spacing: 0.2px;
 }
 
 .icon-btn {
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    background: #2563eb;
+    background: linear-gradient(135deg, #2563eb 70%, #3b82f6 100%);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.1em;
-    box-shadow: 0 4px 18px rgba(37, 99, 235, 0.13);
-    border: none;
-    margin: 0 auto;
-    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    font-size: 1.7em;
+    border: 3px solid #e3e8ff;
+    margin: 0 0 0 8px;
+    transition: transform 0.1s, border 0.2s;
     cursor: pointer;
     outline: none;
     position: relative;
@@ -211,35 +232,34 @@ input[type="number"]:focus {
 
 .icon-btn:active {
     background: #1e40af;
-    transform: scale(0.97);
+    border-color: #c7d2fe;
+    transform: scale(0.96);
 }
 
 .icon-btn:focus {
-    box-shadow: 0 0 0 4px #c7d2fe;
+    border-color: #c7d2fe;
 }
 
-.icon-btn img, .icon-btn svg {
-    width: 32px;
-    height: 32px;
+.icon-btn img, .icon-btn svg, .icon-btn i {
+    width: 28px;
+    height: 28px;
     pointer-events: none;
+    font-size: 1em;
 }
 
 .main-btn:disabled {
     background: #bdbdbd !important;
     cursor: not-allowed;
-    box-shadow: none;
 }
 
 .main-btn:hover:not(:disabled) {
     background: #1e40af !important;
     transform: translateY(-2px) scale(1.04);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.16);
 }
 
 .icon-btn:hover:not(:disabled) {
     background: #1e40af !important;
     transform: translateY(-2px) scale(1.04);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.16);
 }
 
 /* Improved button alignment for form actions */
