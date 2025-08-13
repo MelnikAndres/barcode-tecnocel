@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #reader {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        #result {
+            font-size: 1.1em;
+            color: #333;
+            margin-top: 12px;
+        }
+    </style>
+    <!-- html5-qrcode CDN -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Scan a Barcode</h2>
+        <div id="reader"></div>
+        <div id="result">Waiting for scan...</div>
+    </div>
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            document.getElementById('result').textContent = 'Scanned: ' + decodedText;
+        }
+        function onScanFailure(error) {
+            // Optionally handle scan failure
+        }
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", { fps: 10, qrbox: 250, formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.UPC_E] });
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+        BarcodeDetector.getSupportedFormats().then((supportedFormats) => {
+            supportedFormats.forEach((format) => console.log(format));
+        });
+    </script>
+</body>
+
+</html>
